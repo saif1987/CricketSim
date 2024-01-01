@@ -3,6 +3,7 @@
 #include<iostream>
 #include <cstdint>
 #include <list>
+#include <ostream>
 
 class Delivery{
     public:
@@ -28,6 +29,22 @@ class InningsScore{
         uint16_t run;
         uint8_t wickets;
         Delivery over;
+        InningsScore():run(0),wickets(0),over({0,0}){};
+
+    void ApplyDeliveryResult( const DeliveryResult res);
+
+    friend std::ostream &operator << (std::ostream& os, const InningsScore& in);
+
 
 };
 
+std::ostream &operator << (std::ostream& os, const InningsScore& in)
+{
+    return  os<< in.run <<"/" <<in.wickets <<"("<<in.over.overs<<"."<<in.over.ball<<")";
+}
+
+void InningsScore::ApplyDeliveryResult(const DeliveryResult res)
+{
+    this->run = res.run_by_batsman + res.run_by_extra;
+
+}
