@@ -1,9 +1,5 @@
 #include <iostream>
-#include "match_state.h"
-
-
-
-
+#include "play.h"
 
 int main()
 {
