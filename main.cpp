@@ -17,5 +17,7 @@ int main()
 
     Match match = Match(t1,t2);
 
+    std::cout<<match<<std::endl;
+
     return 0;
 }
