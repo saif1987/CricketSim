@@ -1,5 +1,6 @@
 #include <iostream>
 #include "match.h"
+#include "play.h"
 
 int main()
 {
@@ -18,6 +19,9 @@ int main()
     Match match = Match(t1,t2);
 
     std::cout<<match<<std::endl;
+
+    Play play=Play(&match);
+    play.BothInnings();
 
     return 0;
 }

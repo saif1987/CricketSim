@@ -10,20 +10,7 @@
 #include "bowler.h"
 #include "innings.h"
 
-class Player
-{
-public:
-    std::string Name;
-    Player(){};
-    Player(std::string name)
-    {
-        Name = name;
-    };
-    friend std::ostream& operator <<(std::ostream &os, const Player &p){
-        os << p.Name;
-        return os;
-    };
-};
+
 
 class Team
 {
@@ -58,6 +45,7 @@ class Match
 public:
     Team T1;
     Team T2;
+
     Match(){};
     Match(Team t1, Team t2)
     {

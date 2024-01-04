@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <list>
 #include <ostream>
+#include <memory>
 
 class Delivery
 {
@@ -35,3 +36,17 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const InningsScore &in);
 };
 
+class Player
+{
+public:
+    std::string Name;
+    Player(){};
+    Player(std::string name)
+    {
+        Name = name;
+    };
+    friend std::ostream& operator <<(std::ostream &os, const Player &p){
+        os << p.Name;
+        return os;
+    };
+};
