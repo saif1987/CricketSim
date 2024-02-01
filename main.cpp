@@ -1,27 +1,166 @@
 #include <iostream>
-#include "match.h"
-#include "play.h"
+#include <cstdlib> // For rand() and srand()
+#include <ctime>   // For time()
+#include <iomanip>
+
+
+
+std::string generateRandomName() {
+    const std::string vowels[] ={"a","e","i","o","u"};
+    
+    std::string Name = "";
+    for(int i=0;i<2;i++)
+    {
+            int numSyllables = 3+ std::rand()%3;
+
+    while (numSyllables--) {
+        const char ch = 'a' + std::rand()%('z'-'a'+1);
+        Name = Name + ch + vowels[std::rand()%5];
+    }
+    Name += " ";
+    }
+    return Name;
+}
+
+
+
+// Batsman class
+class Batsman
+{
+private:
+    std::string playerName; // Assuming each batsman has a name
+    int runsScored;
+    int batsmanRun;
+    int ballsFaced;
+
+public:
+    Batsman() : runsScored(0), batsmanRun(0), ballsFaced(0) {
+        playerName = generateRandomName();
+
+    }
+
+    int bat()
+    {
+        // Simulate a ball delivery for the batsman
+        runsScored = rand() % 6;
+        batsmanRun += runsScored;
+        ballsFaced++;
+        return runsScored;
+    }
+
+    int getBatsmanRuns() const
+    {
+        return batsmanRun;
+    }
+
+    int getBallsFaced() const
+    {
+        return ballsFaced;
+    }
+
+     const std::string& getPlayerName() const {
+        return playerName;
+    }
+
+    // Overloaded << operator to serialize the batsman
+    friend std::ostream& operator<<(std::ostream& os, const Batsman& batsman) {
+        os << "Player: " << std::setw(20) << batsman.playerName << "---"
+           << std::setw(10)  << batsman.batsmanRun << "(" << batsman.ballsFaced << ")";
+        return os;
+    }
+};
+
+// Bowler class
+class Bowler
+{
+public:
+    int bowl()
+    {
+        // Simulate a ball delivery for the bowler
+        return rand() % 6;
+    }
+};
+
+// Function to display the scorecard
+void displayScorecard(int overs, int ballsInOver, int totalRuns, int wickets, Batsman *batsman)
+{
+    std::cout << "\n=== Scorecard ===" << std::endl;
+    std::cout << "Overs: " << overs << "." << ballsInOver << " | Runs: " << totalRuns << " | Wickets: " << wickets << "| Batsman: " << *batsman << std::endl;
+    std::cout << "=================" << std::endl;
+}
 
 int main()
 {
-    std::cout<<"Hello"<<std::endl;
+    // Seed the random number generator with the current time
+    std::srand(std::time(0));
 
-    Team t1 = Team("Team1",{
-        "T1Player1","T1Player2","T1Player3","T1Player4",
-        "T1Player5","T1Player6","T1Player7","T1Player8",
-        "T1Player9","T1Player10","T1Player11"});
+    Batsman batting_lineup[10];
+    Batsman *batsman;
+    Bowler bowler;
 
-    Team t2 = Team("Team2",{
-        "T2Player1","T2Player2","T2Player3","T2Player4",
-        "T2Player5","T2Player6","T2Player7","T2Player8",
-        "T2Player9","T2Player10","T2Player11"});
+    int totalRuns = 0;
+    int wickets = 0;
+    int overs = 0;
+    int ballsInOver = 0;
 
-    Match match = Match(t1,t2);
+    // Simulate a test match with 2 innings per side
+    for (int inning = 1; inning <= 2; ++inning)
+    {
+        std::cout << "Inning " << inning << ":" << std::endl;
 
-    std::cout<<match<<std::endl;
+        // Reset variables for each inning
+        totalRuns = 0;
+        wickets = 0;
+        overs = 0;
+        ballsInOver = 0;
+        batsman = &batting_lineup[wickets];
 
-    Play play=Play(&match);
-    play.BothInnings();
+        while (overs < 90)
+        { // Simulate a test match with a maximum of 90 overs per inning
+            // Simulate a ball delivery by the bowler
+            int runsScored = batsman->bat();
+            // int runsConceded = bowler.bowl();
+
+            // Display the outcome of the ball delivery
+            // std::cout << "Over " << overs + 1 << "." << ballsInOver + 1 << ": ";
+            if (runsScored == 0)
+            {
+                // std::cout << "Dot ball" << std::endl;
+            }
+            else
+            {
+                // std::cout << "Batsman scored " << runsScored << " runs" << std::endl;
+                totalRuns += runsScored;
+            }
+
+            // Update overs and balls
+            ballsInOver++;
+            if (ballsInOver == 6)
+            {
+                ballsInOver = 0;
+                overs++;
+                // displayScorecard(overs, ballsInOver, totalRuns, wickets, batsman);
+            }
+
+            // Simulate a wicket falling randomly after 30 runs
+            if (totalRuns >= 30 && std::rand() % 6 == 0)
+            {
+                wickets++;
+                std::cout << "Wicket fallen! Batsman Run: " << *batsman << std::endl;
+
+                if(wickets == 10) 
+                {
+                    break;
+                }
+                batsman = &batting_lineup[wickets];
+
+            }
+        }
+
+        std::cout << "End of inning " << inning << ". Total runs: " << totalRuns << ", Wickets: " << wickets << std::endl;
+    }
+
+    std::cout << "End of the test match." << std::endl;
 
     return 0;
 }

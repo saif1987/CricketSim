@@ -44,10 +44,12 @@ class Play
 
         void BothInnings(void){
             SelectBattingTeam();
+            playinnings();
             std::cout<<pT1->Name<<" will batting is  done"<<std::endl;
 
             first_innings_done=true;
             SelectBattingTeam();
+            playinnings();
             std::cout<<pT1->Name<<" will batting is  done"<<std::endl;
 
         }
