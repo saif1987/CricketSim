@@ -2,22 +2,62 @@
 #include <cstdlib> // For rand() and srand()
 #include <ctime>   // For time()
 #include <iomanip>
+#include <algorithm>
+#include <string>
 
 
+bool isCharacterNotInList(char ch, const std::string& charList) {
+    return std::find(charList.begin(), charList.end(), ch) == charList.end();
+}
+
+char generateRandomCharacter() {
+    // Define the characters and their corresponding frequencies
+    const char characters[] = "ETAOINSHRDLCUMFWGYBPVKXJZ";
+    const double frequencies[] = {13.0, 9.1, 8.1, 7.5, 7.0, 6.7, 6.3, 6.1, 6.0, 4.3, 4.0, 2.8, 2.8, 2.4, 2.2, 2.0, 1.9, 1.7, 1.6, 1.5, 1.0, 0.8, 0.2, 0.1, 0.1, 0.1};
+
+    // Calculate the total frequency
+    double totalFrequency = 0.0;
+    for (double freq : frequencies) {
+        totalFrequency += freq;
+    }
+
+    // Generate a random number between 0 and the total frequency
+    double randomValue = ((double)rand() / RAND_MAX) * totalFrequency;
+
+    // Use a weighted random selection based on the frequencies
+    double cumulativeFrequency = 0.0;
+    for (size_t i = 0; i < sizeof(characters) - 1; ++i) {
+        cumulativeFrequency += frequencies[i];
+        if (randomValue <= cumulativeFrequency) {
+            return std::tolower( characters[i]);
+        }
+    }
+
+    // Default to the last character if for some reason the loop didn't return
+    return std::tolower(characters[sizeof(characters) - 1]);
+}
 
 std::string generateRandomName() {
-    const std::string vowels[] ={"a","e","i","o","u"};
-    
+    const std::string vowels = {"aeiou"};
+    const int n_v = 5;
     std::string Name = "";
-    for(int i=0;i<2;i++)
+    for (int i = 0; i < 2; i++)
     {
-            int numSyllables = 3+ std::rand()%3;
+        int numSyllables = 2 + std::rand() % 2;
+        bool isfirstsyllable = true;
+        while (numSyllables--)
+        {
+            char ch = generateRandomCharacter(); //'a' + std::rand()%('z'-'a'+1);
 
-    while (numSyllables--) {
-        const char ch = 'a' + std::rand()%('z'-'a'+1);
-        Name = Name + ch + vowels[std::rand()%5];
-    }
-    Name += " ";
+            Name += (isfirstsyllable) ? std::toupper(ch) : ch;
+            if (std::find(vowels.begin(), vowels.end(), ch) == vowels.end())
+                Name += vowels[std::rand() % n_v];
+            else
+                Name += generateRandomCharacter(); 
+
+            isfirstsyllable = false;
+        }
+        Name += " ";
     }
     return Name;
 }
@@ -36,6 +76,12 @@ private:
 public:
     Batsman() : runsScored(0), batsmanRun(0), ballsFaced(0) {
         playerName = generateRandomName();
+
+    }
+
+    void startNewInnigs()  
+    {
+        runsScored =(0); batsmanRun=(0); ballsFaced=(0);
 
     }
 
@@ -81,6 +127,16 @@ public:
     }
 };
 
+// Function to display the cricket match score summary
+void displayMatchSummary(const Batsman batsmen[], int numBatsmen) {
+    std::cout << "=== Cricket Match Score Summary ===" << std::endl;
+
+    for (int i = 0; i < numBatsmen; ++i) {
+        std::cout << batsmen[i] << std::endl;
+    }
+
+    std::cout << "===================================" << std::endl;
+}
 // Function to display the scorecard
 void displayScorecard(int overs, int ballsInOver, int totalRuns, int wickets, Batsman *batsman)
 {
@@ -114,6 +170,7 @@ int main()
         overs = 0;
         ballsInOver = 0;
         batsman = &batting_lineup[wickets];
+        batsman->startNewInnigs();
 
         while (overs < 90)
         { // Simulate a test match with a maximum of 90 overs per inning
@@ -153,11 +210,13 @@ int main()
                     break;
                 }
                 batsman = &batting_lineup[wickets];
+                batsman->startNewInnigs();
 
             }
         }
 
         std::cout << "End of inning " << inning << ". Total runs: " << totalRuns << ", Wickets: " << wickets << std::endl;
+        displayMatchSummary(batting_lineup,10);
     }
 
     std::cout << "End of the test match." << std::endl;
