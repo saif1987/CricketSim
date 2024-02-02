@@ -2,7 +2,7 @@
 #include "match.h"
 #include "play.h"
 
-int main()
+int older_sim()
 {
     std::cout<<"Hello"<<std::endl;
 
