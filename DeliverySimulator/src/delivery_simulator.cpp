@@ -1,74 +1,9 @@
+#include "delivery_simulator.h"
+
 #include <iostream>
 #include <vector>
 #include <random>
 #include <algorithm>
-
-enum WicketType {
-    NO_WICKET = 0,
-    CAUGHT,
-    BOWLED,
-    HIT_WICKET,
-    LBW,
-    CAUGHT_AND_BOWLED,
-    RETIRED_HURT,
-    RUN_OUT,
-    STUMPED
-};
-
-class DeliveryOutcome {
-public:
-    uint8_t wicket_type;
-    uint8_t batsman_run;
-    uint8_t wide_run;
-    uint8_t lb_run;
-    uint8_t bye_run;
-    uint8_t nb_run;
-
-    uint8_t total_extras;
-    uint8_t total_runs;
-
-    DeliveryOutcome() : wicket_type(0), batsman_run(0), wide_run(0), lb_run(0), bye_run(0), nb_run(0), total_extras(0), total_runs(0) {}
-
-    void calculateTotals() {
-        total_extras = wide_run + lb_run + bye_run + nb_run;
-        total_runs = total_extras + batsman_run;
-    }
-
-    void printOutcome() const {
-        std::cout << "Wicket Type: " << static_cast<int>(wicket_type) << std::endl;
-        std::cout << "Batsman Run: " << static_cast<int>(batsman_run) << std::endl;
-        std::cout << "Wide Run: " << static_cast<int>(wide_run) << std::endl;
-        std::cout << "Leg Bye Run: " << static_cast<int>(lb_run) << std::endl;
-        std::cout << "Bye Run: " << static_cast<int>(bye_run) << std::endl;
-        std::cout << "No Ball Run: " << static_cast<int>(nb_run) << std::endl;
-        std::cout << "Total Extras: " << static_cast<int>(total_extras) << std::endl;
-        std::cout << "Total Runs: " << static_cast<int>(total_runs) << std::endl;
-    }
-};
-
-class Simulator {
-private:
-    std::random_device rd;
-    std::mt19937 gen;
-    std::uniform_real_distribution<double> dis;
-
-public:
-    Simulator() : gen(rd()), dis(0.0, 1.0) {}
-
-    size_t simulateDelivery(const std::vector<double> &probabilities, const std::string &category) {
-        double random_value = dis(gen);
-        double cumulative_probability = 0.0;
-
-        for (size_t i = 0; i < probabilities.size(); ++i) {
-            cumulative_probability += probabilities[i];
-            if (random_value <= cumulative_probability) {
-                // std::cout << category << " Outcome Index: " << i << std::endl;
-                return i;
-            }
-        }
-        return 0; // Default case
-    }
-};
 
 DeliveryOutcome DeliverySimulator() {
     Simulator simulator;
