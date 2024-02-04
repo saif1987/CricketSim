@@ -48,8 +48,13 @@ def convert_yaml_to_df(yaml_file, csv_file):
         # df['wicket_kind'] = df['wicket.kind'].apply(lambda x: getattr(WicketKind, str(x).upper(), None))
 
         # print(df)
+    columns_to_drop = ['non_striker', 'bowler', 'batsman', 'runs.extras', 'runs.total', 'wicket.player_out', 'wicket.fielders']
 
-    df= df.drop(columns=['non_striker','bowler','batsman','runs.extras','runs.total','wicket.player_out','wicket.fielders'])
+    # Check if the columns exist before dropping
+    columns_to_drop_existing = [col for col in columns_to_drop if col in df.columns]
+
+    # Drop the existing columns
+    df = df.drop(columns=columns_to_drop_existing)
     print(df.columns)
     return df
         # df.to_csv(csv_file_path, mode='a',header=False, index=False)
@@ -57,7 +62,7 @@ def convert_yaml_to_df(yaml_file, csv_file):
 
 sourcefilepath = '/home/md/Downloads/odis/odis/'
 df_list = []
-maxx=10
+maxx = 100
 # Loop through all files in the specified directory
 for filename in os.listdir(sourcefilepath):
     if maxx>0:
@@ -69,8 +74,10 @@ for filename in os.listdir(sourcefilepath):
         print(yaml_file_path)
         csv_file_path = os.path.join(sourcefilepath, filename[:-5] + '.csv')
         df = convert_yaml_to_df(yaml_file_path, csv_file_path)
-        
-        df_list.append(df)
+        if df is None:
+            maxx=maxx+1
+        else:
+            df_list.append(df)
 
 # Concatenate all DataFrames in the list into a single DataFrame
 df_combined = pd.concat(df_list, ignore_index=True)
