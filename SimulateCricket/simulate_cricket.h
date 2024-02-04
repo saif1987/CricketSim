@@ -1,3 +1,8 @@
+#ifndef SIMULATE_CRICKET_H
+#define SIMULATE_CRICKET_H
+
+#include "delivery_simulator.h"
+
 #include <iostream>
 #include <cstdlib> // For rand() and srand()
 #include <ctime>   // For time()
@@ -5,12 +10,77 @@
 #include <algorithm>
 #include <string>
 
+// Batsman class
+class Batsman
+{
+private:
+    std::string playerName; // Assuming each batsman has a name
+    int runsScored;
+    int batsmanRun;
+    int ballsFaced;
+
+public:
+
+    Batsman() : runsScored(0), batsmanRun(0), ballsFaced(0), playerName(std::string(""))
+        {
+        }
+    void startNewInnigs()
+    {
+        runsScored = (0);
+        batsmanRun = (0);
+        ballsFaced = (0);
+    }
+
+    int bat()
+    {
+        // Simulate a ball delivery for the batsman
+        runsScored = rand() % 6;
+        batsmanRun += runsScored;
+        ballsFaced++;
+        return runsScored;
+    }
+
+    int getBatsmanRuns() const
+    {
+        return batsmanRun;
+    }
+
+    int getBallsFaced() const
+    {
+        return ballsFaced;
+    }
+
+    const std::string &getPlayerName() const
+    {
+        return playerName;
+    }
+
+    // Overloaded << operator to serialize the batsman
+    friend std::ostream &operator<<(std::ostream &os, const Batsman &batsman)
+    {
+        os << "Player: " << std::setw(20) << batsman.playerName << "---"
+           << std::setw(10) << batsman.batsmanRun << "(" << batsman.ballsFaced << ")";
+        return os;
+    }
+};
+
+// Bowler class
+class Bowler
+{
+public:
+    int bowl()
+    {
+        // Simulate a ball delivery for the bowler
+        return rand() % 6;
+    }
+};
+
 class SimulateCricket
 {
 public:
     bool isCharacterNotInList(char ch, const std::string &charList);
-    char generateRandomCharacter();
-    std::string generateRandomName();
+    static char generateRandomCharacter();
+    static std::string generateRandomName();
     void displayMatchSummary(const Batsman batsmen[], int numBatsmen);
     void displayScorecard(int overs, int ballsInOver, int totalRuns, int wickets, Batsman *batsman);
     SimulateCricket();
@@ -20,6 +90,9 @@ bool SimulateCricket::isCharacterNotInList(char ch, const std::string &charList)
 {
     return std::find(charList.begin(), charList.end(), ch) == charList.end();
 }
+
+
+
 
 char SimulateCricket::generateRandomCharacter()
 {
@@ -78,74 +151,10 @@ std::string SimulateCricket::generateRandomName()
     return Name;
 }
 
-// Batsman class
-class Batsman
-{
-private:
-    std::string playerName; // Assuming each batsman has a name
-    int runsScored;
-    int batsmanRun;
-    int ballsFaced;
 
-public:
-    Batsman() : runsScored(0), batsmanRun(0), ballsFaced(0)
-    {
-        playerName = SimulateCricket::generateRandomName();
-    }
-
-    void startNewInnigs()
-    {
-        runsScored = (0);
-        batsmanRun = (0);
-        ballsFaced = (0);
-    }
-
-    int bat()
-    {
-        // Simulate a ball delivery for the batsman
-        runsScored = rand() % 6;
-        batsmanRun += runsScored;
-        ballsFaced++;
-        return runsScored;
-    }
-
-    int getBatsmanRuns() const
-    {
-        return batsmanRun;
-    }
-
-    int getBallsFaced() const
-    {
-        return ballsFaced;
-    }
-
-    const std::string &getPlayerName() const
-    {
-        return playerName;
-    }
-
-    // Overloaded << operator to serialize the batsman
-    friend std::ostream &operator<<(std::ostream &os, const Batsman &batsman)
-    {
-        os << "Player: " << std::setw(20) << batsman.playerName << "---"
-           << std::setw(10) << batsman.batsmanRun << "(" << batsman.ballsFaced << ")";
-        return os;
-    }
-};
-
-// Bowler class
-class Bowler
-{
-public:
-    int bowl()
-    {
-        // Simulate a ball delivery for the bowler
-        return rand() % 6;
-    }
-};
 
 // Function to display the cricket match score summary
-void SimulateCricket::displayMatchSummary(const Batsman batsmen[], int numBatsmen)
+void SimulateCricket::displayMatchSummary(const Batsman batsmen[], int const numBatsmen)
 {
     std::cout << "=== Cricket Match Score Summary ===" << std::endl;
 
@@ -239,5 +248,7 @@ SimulateCricket::SimulateCricket()
 
     std::cout << "End of the test match." << std::endl;
 
-    return 0;
+    // return 0;
 }
+
+#endif //SIMULATE_CRICKET_H

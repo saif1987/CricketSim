@@ -2,8 +2,16 @@ cmake_minimum_required(VERSION 3.0)
 
 project(CricketSim)
 
-add_executable(${PROJECT_NAME} yaml_to_csv.cpp)
+# Add the source file
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/main.cpp)
+
+
+
+add_subdirectory(DeliverySimulator)
 
 # set(CORE_DIRECTORY CoreCricket)
 
-# target_include_directories(${PROJECT_NAME} PUBLIC ${CORE_DIRECTORY}/include)
+# Include directories
+target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/SimulateCricket/ )#${CORE_DIRECTORY}/include)
+
+target_link_libraries(${PROJECT_NAME}  DeliverySimulator)

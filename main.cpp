@@ -1,8 +1,11 @@
+#include "simulate_cricket.h"
+
 #include <iostream>
-#include "match.h"
-#include "play.h"
+
 
 int main()
-{
-    simulated_cricket();
+{   
+    SimulateCricket sim_cric;
+    // sim_cric = new SimulateCricket();
+    return 0;
 }
