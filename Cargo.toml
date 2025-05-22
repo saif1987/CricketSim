@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "crates/cli",
+    # "crates/core", # Uncomment when core crate is added
+    # "crates/sim",  # Uncomment when sim crate is added
+    # "crates/dash", # Uncomment when dash crate is added
+]

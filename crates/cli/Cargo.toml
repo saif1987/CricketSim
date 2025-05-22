@@ -1,0 +1,11 @@
+[package]
+name = "cricket_simulator_cli" # Or your preferred CLI executable name
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# Add CLI-specific dependencies here, e.g., for argument parsing like `clap`
+# clap = { version = "4.0", features = ["derive"] }
+# core = { path = "../core" } # Uncomment when core crate is added
